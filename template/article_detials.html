@@ -46,7 +46,7 @@
             <span class="glyphicon glyphicon-time">
                 博文最后更新时间：
             </span>
-            {{ article.update_time.strftime("%Y年%m月%d日 %H:%M:%S") }}
+            {{ article.create_time.strftime("%Y年%m月%d日 %H:%M:%S") }}
         </p>
     </div>
     {% if current_user %}
