@@ -112,7 +112,7 @@ class SiteCacheService(object):
         # article_month_count = json.loads(article_month_count_json, object_hook=Dict) if article_month_count_json else None
         # if article_month_count is None:
             article_month_count = yield thread_do(ArticleService.get_count_by_month, db)
-            print(article_month_count)
+            # print(article_month_count)
             # if article_month_count is not None:
             #     yield SiteCacheService.update_article_month_count(
             #         cache_manager, article_month_count, is_pub_all, pubsub_manager.

@@ -115,7 +115,6 @@ def parse_command_line():
 
 
 if __name__ == '__main__':
-    print('111')
     if len(sys.argv) >= 2:
         if sys.argv[1] == 'upgradedb':
             # 更新数据库结构，初次获取或更新版本后调用一次python main.py upgradedb即可
@@ -133,6 +132,7 @@ if __name__ == '__main__':
     # 全局注册application
     config['application'] = application
     loop = tornado.ioloop.IOLoop.current()
+    print(settings)
     # 加载redis消息监听客户端
     pubsub_manager = PubSubService(redis_pub_sub_config, application, loop)
     pubsub_manager.long_listen()
