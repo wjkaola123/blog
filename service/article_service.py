@@ -127,6 +127,15 @@ class ArticleService(object):
         article_count = db_session.query(Article).count()
         return article_count
 
+    @staticmethod
+    def get_count_by_month(db_session):
+        sql = r'''select substr(update_time,1, 7) as monthw, 
+                         count(id) as num from articles 
+                         group by substr(update_time,1, 7)
+                         '''
+        month_articles = db_session.execute(sql).fetchall()
+        return dict(month_articles)
+
     # article_sources
     @staticmethod
     def get_article_sources(db_session):

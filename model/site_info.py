@@ -13,3 +13,4 @@ class SiteCollection(object):
     article_count = None        # int
     comment_count = None        # int
     article_sources = None      # JSON(list)
+    article_month_count = None  # JSON(list)

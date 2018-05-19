@@ -32,7 +32,8 @@ settings = dict(
 # sqlalchemy连接池配置以及生成链接池工厂实例
 def db_poll_init():
     engine_config = config['database']['engine_url']
-    engine = create_engine(engine_config, **config['database']["engine_setting"])
+    engine = create_engine(engine_config,
+                           **config['database']["engine_setting"])
     config['database']['engine'] = engine
     db_poll = sessionmaker(bind=engine)
     return db_poll
@@ -48,7 +49,8 @@ class Application(tornado.web.Application):
     def __init__(self):
         super(Application, self).__init__(handlers, **settings)
         self.session_manager = SessionManager(config['redis_session'])
-        self.thread_executor = concurrent.futures.ThreadPoolExecutor(config['max_threads_num'])
+        self.thread_executor = concurrent.futures.ThreadPoolExecutor(
+            config['max_threads_num'])
         self.db_pool = db_poll_init()
         self.cache_manager = cache_manager_init()
         self.pubsub_manager = None
@@ -62,13 +64,19 @@ def parse_command_line():
     options.define("log_file_path", help="path of log_file", type=str)
     options.define("log_level", help="level of logging", type=str)
     # 集群中最好有且仅有一个实例为master，一般用于执行全局的定时任务
-    options.define("master", help="is master node? (true:master / false:slave)", type=bool)
+    options.define(
+        "master",
+        help="is master node? (true:master / false:slave)",
+        type=bool)
     # sqlalchemy engine_url, 例如pgsql 'postgresql+psycopg2://mhq:1qaz2wsx@localhost:5432/blog'
     options.define("engine_url", help="engine_url for sqlalchemy", type=str)
     # redis相关配置, 覆盖所有用到redis位置的配置
     options.define("redis_host", help="redis host e.g 127.0.0.1", type=str)
     options.define("redis_port", help="redis port e.g 6379", type=int)
-    options.define("redis_password", help="redis password set this option if has pwd ", type=str)
+    options.define(
+        "redis_password",
+        help="redis password set this option if has pwd ",
+        type=str)
     options.define("redis_db", help="redis db e.g 0", type=int)
 
     # 读取 项目启动时，命令行上添加的参数项
@@ -107,6 +115,7 @@ def parse_command_line():
 
 
 if __name__ == '__main__':
+    print('111')
     if len(sys.argv) >= 2:
         if sys.argv[1] == 'upgradedb':
             # 更新数据库结构，初次获取或更新版本后调用一次python main.py upgradedb即可
@@ -116,8 +125,8 @@ if __name__ == '__main__':
     # 加载命令行配置
     parse_command_line()
     # 加载日志管理
-    log_config.init(config['port'], config['log_console'],
-                    config['log_file'], config['log_file_path'], config['log_level'])
+    log_config.init(config['port'], config['log_console'], config['log_file'],
+                    config['log_file_path'], config['log_level'])
     # 创建application
     application = Application()
     application.listen(config['port'])
@@ -131,5 +140,6 @@ if __name__ == '__main__':
     # 为master节点注册定时任务
     if config['master']:
         from extends.time_task import TimeTask
-        TimeTask(config['database']['engine']).add_cache_flush_task(flush_all_cache).start_tasks()
+        TimeTask(config['database']['engine']).add_cache_flush_task(
+            flush_all_cache).start_tasks()
     loop.start()

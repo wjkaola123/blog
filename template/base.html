@@ -109,12 +109,12 @@
                 <div class="col-md-4 blog_nav">
                     {% block blog_nav_plugin %}
                         {% for plugin in SiteCollection.plugins %}
-                            {% if not plugin.disabled %}
+                            {% if not plugin.disabled %}    
                                 {% if plugin.content != Constants.SYSTEM_PLUGIN %}
                                     <div id="{{ plugin.title }}" class="entry-box">
                                         <h5><strong>{{ plugin.title }}</strong></h5>
                                         {% raw plugin.content %}
-                                    </div>
+                                    </div>									
                                 {% else %}
                                     <div class="entry-box">
                                         <h5><strong>博客统计</strong></h5>
@@ -132,11 +132,20 @@
                                                 <span class="badge">{{ source.articles_count }}</span>
                                             {% end %}
                                         </p>
+
                                     </div>
                                 {% end %}
                             {% end %}
                         {% end %}
                     {% end %}
+					<div id="month_count" class="entry-box">
+						<h5><strong>文章归档</strong></h5>
+						<p>
+							{% for k, v in SiteCollection.article_month_count.items() %}
+								<p>{{ k }} : <span class="badge">{{ v }}</span></p>
+							{% end %}
+						</p>
+					</div>						
                 </div>
             </div>
         </div>

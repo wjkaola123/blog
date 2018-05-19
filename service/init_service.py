@@ -52,6 +52,7 @@ class SiteCacheService(object):
         yield SiteCacheService.query_article_count(cache_manager, thread_do, db, is_pub_all, pubsub_manager)
         yield SiteCacheService.query_comment_count(cache_manager, thread_do, db, is_pub_all, pubsub_manager)
         yield SiteCacheService.query_article_sources(cache_manager, thread_do, db, is_pub_all, pubsub_manager)
+        yield SiteCacheService.query_article_month_count(cache_manager, thread_do, db, is_pub_all, pubsub_manager)
 
     @staticmethod
     @tornado.gen.coroutine
@@ -104,6 +105,20 @@ class SiteCacheService(object):
         else:
             SiteCollection.article_count = int(article_count)
 
+    @staticmethod
+    @tornado.gen.coroutine
+    def query_article_month_count(cache_manager, thread_do, db, is_pub_all=False, pubsub_manager=None):
+        # article_month_count_json = yield cache_manager.call("GET", site_cache_keys['article_month_count'])
+        # article_month_count = json.loads(article_month_count_json, object_hook=Dict) if article_month_count_json else None
+        # if article_month_count is None:
+            article_month_count = yield thread_do(ArticleService.get_count_by_month, db)
+            print(article_month_count)
+            # if article_month_count is not None:
+            #     yield SiteCacheService.update_article_month_count(
+            #         cache_manager, article_month_count, is_pub_all, pubsub_manager.
+            #     )
+        # else:
+            SiteCollection.article_month_count = article_month_count        
     @staticmethod
     @tornado.gen.coroutine
     def query_article_sources(cache_manager, thread_do, db, is_pub_all=False, pubsub_manager=None):
@@ -263,6 +278,17 @@ class SiteCacheService(object):
                                          source.articles_count)
             if is_pub_all:
                 yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['article_sources_updated'])
+
+    @staticmethod
+    @tornado.gen.coroutine
+    def update_article_month_count(cache_manager, article_month_count, is_pub_all=False, pubsub_manager=None):
+        if article_month_count is not None:
+            SiteCollection.article_month_count = article_month_count
+            article_month_count_json = json.dumps(article_month_count, cls=AlchemyEncoder)
+            yield cache_manager.call("SET", site_cache_keys['article_month_count'], article_month_count_json)
+
+            if is_pub_all:
+                yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['article_sources_updated'])                        
 
     # article增删改后的操作article_count以及对应的source_count
     @staticmethod
