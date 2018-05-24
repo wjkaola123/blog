@@ -1,4 +1,5 @@
 # coding=utf-8
+import sys
 from tornado import gen
 
 from base import BaseHandler
@@ -25,6 +26,7 @@ class HomeHandler(BaseHandler):
         article_search_params.show_comments_count = True
         SiteCollection.article_month_count = yield self.async_do(ArticleService.get_count_by_month, self.db)
         print(SiteCollection.article_month_count)
+        sys.stdout.flush()
         pager = yield self.async_do(ArticleService.page_articles, self.db, pager, article_search_params)
         self.render("index.html", base_url=self.reverse_url('index'),
                     pager=pager, article_search_params=article_search_params)
