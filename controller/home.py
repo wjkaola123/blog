@@ -10,6 +10,8 @@ from model.search_params.comment_params import CommentSearchParams
 from service.user_service import UserService
 from service.article_service import ArticleService
 from service.comment_service import CommentService
+from model.site_info import SiteCollection
+
 
 
 class HomeHandler(BaseHandler):
@@ -21,6 +23,8 @@ class HomeHandler(BaseHandler):
         article_search_params.show_source = True
         article_search_params.show_summary = True
         article_search_params.show_comments_count = True
+        SiteCollection.article_month_count = yield self.async_do(ArticleService.get_count_by_month, self.db)
+        print(SiteCollection.article_month_count)
         pager = yield self.async_do(ArticleService.page_articles, self.db, pager, article_search_params)
         self.render("index.html", base_url=self.reverse_url('index'),
                     pager=pager, article_search_params=article_search_params)

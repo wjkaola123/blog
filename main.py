@@ -132,7 +132,7 @@ if __name__ == '__main__':
     # 全局注册application
     config['application'] = application
     loop = tornado.ioloop.IOLoop.current()
-    print(settings)
+    # print(settings)
     # 加载redis消息监听客户端
     pubsub_manager = PubSubService(redis_pub_sub_config, application, loop)
     pubsub_manager.long_listen()

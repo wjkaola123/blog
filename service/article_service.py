@@ -129,9 +129,9 @@ class ArticleService(object):
 
     @staticmethod
     def get_count_by_month(db_session):
-        sql = r'''select substr(update_time,1, 7) as monthw, 
+        sql = r'''select substr(create_time,1, 7) as monthw, 
                          count(id) as num from articles 
-                         group by substr(update_time,1, 7)
+                         group by substr(create_time,1, 7)
                          '''
         month_articles = db_session.execute(sql).fetchall()
         return dict(month_articles)

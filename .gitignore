@@ -1,3 +1,5 @@
 
 *.pyc
 logs/log@8888.txt
+
+logs/
