@@ -12,6 +12,8 @@ from extends.session_tornadis import Session
 from model.logined_user import LoginUser
 from service.init_service import SiteCacheService
 from service.blog_view_service import BlogViewService
+from service.article_service import ArticleService
+from model.site_info import SiteCollection
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -34,6 +36,10 @@ class BaseHandler(tornado.web.RequestHandler):
             self.current_user = LoginUser(
                 self.session[session_keys['login_user']])
         self.add_pv_uv()  # 与主代码异步执行，所以不用yield阻塞
+        # 更新博客统计数据
+        SiteCollection.article_month_count = yield self.async_do(
+            ArticleService.get_count_by_month, self.db)
+
 
     #  增加pv，uv, 调用该方法可以不用yield阻塞以达到与主代码异步执行
     #  每次调用pv+1, uv根据cookie每24小时只+1

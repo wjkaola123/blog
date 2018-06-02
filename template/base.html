@@ -141,8 +141,8 @@
 					<div id="month_count" class="entry-box">
 						<h5><strong>文章归档</strong></h5>
 						<p>
-							{% for k, v in SiteCollection.article_month_count.items() %}
-								<p>{{ k }} : <span class="badge">{{ v }}</span></p>
+							{% for item in SiteCollection.article_month_count %}
+								<p>{{ item[0] }} : <span class="badge">{{ item[1] }}</span></p>
 							{% end %}
 						</p>
 					</div>						

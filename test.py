@@ -24,6 +24,7 @@ def get_count_by_month(db_session):
                         group by substr(update_time,1, 7)
                         '''
     month_writes = db_session.execute(sql).fetchall()
+    print(month_writes)
     return month_writes
 
 

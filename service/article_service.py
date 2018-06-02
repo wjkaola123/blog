@@ -132,9 +132,10 @@ class ArticleService(object):
         sql = r'''select substr(create_time,1, 7) as monthw, 
                          count(id) as num from articles 
                          group by substr(create_time,1, 7)
+                         order by substr(create_time,1, 7) desc
                          '''
         month_articles = db_session.execute(sql).fetchall()
-        return dict(month_articles)
+        return month_articles
 
     # article_sources
     @staticmethod
